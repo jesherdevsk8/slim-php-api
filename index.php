@@ -10,14 +10,15 @@ use Faker\Factory as FakerFactory;
 $app = AppFactory::create();
 $renderer = new PhpRenderer(__DIR__);
 
-$app->get('/{format}', function ($request, $response, $args) use ($renderer) {
+$app->get('/', function ($request, $response, $args) use ($renderer) {
     $faker  = FakerFactory::create();
-    $format = isset($args['format']) ? $args['format'] : 'api';
-    $name   = $request->getQueryParams()['name'] ?? 'Usuário';
+    $format = $request->getQueryParams()['format'] ?? 'html';
+    $name   = $request->getQueryParams()['name'] ?? 'User';
 
     $usuarios = [];
+    $numUsers = ($format === 'api') ? 100 : 10;
 
-    for ($i = 0; $i < 20; $i++) {
+    for ($i = 0; $i < $numUsers; $i++) {
         $usuarios[] = [
             'id' => $i + 1,
             'nome' => $faker->name,
@@ -28,8 +29,10 @@ $app->get('/{format}', function ($request, $response, $args) use ($renderer) {
     if ($format === 'api') {
         $response->getBody()->write(json_encode($usuarios));
         return $response->withHeader('Content-Type', 'application/json');
-    } else {
+    } elseif($format === 'html') {
         return $renderer->render($response, 'src/index.php', ['usuarios' => $usuarios, 'name' => $name]);
+    } else {
+        return $response->withStatus(400)->write('Formato inválido. Use "api" para retorno em json"');
     }
 });
 

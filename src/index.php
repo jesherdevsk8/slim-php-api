@@ -15,7 +15,7 @@
 <div class="pure-g">
     <div class="pure-u-1-5"></div>
     <div class="pure-u-3-5">
-        <h1>Usuários</h1>
+        <h1>Welcome, <?= $name ?>!</h1>
         <table class="pure-table">
             <thead>
             <tr>
