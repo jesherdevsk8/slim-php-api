@@ -14,7 +14,7 @@ $app->get('/', function ($request, $response, $args) use ($renderer) {
     $faker = FakerFactory::create();
     $usuarios = [];
 
-    for ($i = 0; $i < 10; $i++) {
+    for ($i = 0; $i < 20; $i++) {
         $usuarios[] = [
             'id' => $i + 1,
             'nome' => $faker->name,
@@ -22,7 +22,7 @@ $app->get('/', function ($request, $response, $args) use ($renderer) {
         ];
     }
 
-    return $renderer->render($response, 'index.php', ['usuarios' => $usuarios]);
+    return $renderer->render($response, 'src/index.php', ['usuarios' => $usuarios]);
 });
 
 $app->run();
