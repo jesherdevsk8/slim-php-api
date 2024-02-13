@@ -10,8 +10,11 @@ use Faker\Factory as FakerFactory;
 $app = AppFactory::create();
 $renderer = new PhpRenderer(__DIR__);
 
-$app->get('/', function ($request, $response, $args) use ($renderer) {
-    $faker = FakerFactory::create();
+$app->get('/{format}', function ($request, $response, $args) use ($renderer) {
+    $faker  = FakerFactory::create();
+    $format = isset($args['format']) ? $args['format'] : 'api';
+    $name   = $request->getQueryParams()['name'] ?? 'Usuário';
+
     $usuarios = [];
 
     for ($i = 0; $i < 20; $i++) {
@@ -22,7 +25,12 @@ $app->get('/', function ($request, $response, $args) use ($renderer) {
         ];
     }
 
-    return $renderer->render($response, 'src/index.php', ['usuarios' => $usuarios]);
+    if ($format === 'api') {
+        $response->getBody()->write(json_encode($usuarios));
+        return $response->withHeader('Content-Type', 'application/json');
+    } else {
+        return $renderer->render($response, 'src/index.php', ['usuarios' => $usuarios, 'name' => $name]);
+    }
 });
 
 $app->run();
