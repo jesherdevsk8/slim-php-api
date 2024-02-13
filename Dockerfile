@@ -16,7 +16,8 @@ COPY . /var/www/html
 
 RUN composer require slim/slim \
     && composer require nyholm/psr7 \
-    && composer require nyholm/psr7-server
+    && composer require nyholm/psr7-server \
+    && composer require fakerphp/faker
 
 EXPOSE 80
 
